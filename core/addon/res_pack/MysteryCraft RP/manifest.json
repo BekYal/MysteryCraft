@@ -1,0 +1,40 @@
+{
+  "format_version": 1,
+  "header": {
+    "description": "§3Addon for MysteryCraft  by §2BekYal",
+    "name": "§1MysteryCraft",
+    "uuid": "8c52e5b9-83fb-4842-9251-3003ab17d063",
+    "version": [
+      0,
+      0,
+      1
+    ],
+    "min_engine_version": [
+      1,
+      8,
+      0
+    ]
+  },
+  "modules": [
+    {
+      "description": "§3Addon for MysteryCraft  by §2BekYal",
+      "type": "resources",
+      "uuid": "f1666918-e8a0-4734-be69-977130ca9108",
+      "version": [
+        0,
+        0,
+        1
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "uuid": "b8f0d703-376f-45a5-93ef-09bd77e8cf0c",
+      "version": [
+        0,
+        0,
+        1
+      ]
+    }
+  ]
+}
