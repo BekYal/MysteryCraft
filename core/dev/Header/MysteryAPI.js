@@ -87,3 +87,27 @@ ImprovedItems.createTotem = function(name, texture, type, func, par) {
 		Item.setEnchantType(ItemID[name], Mask.all, par.enchanted);
 	}
 };
+
+
+
+
+
+ImprovedItems.createTotemq = function(name, texture){
+	IDRegistry.genItemID(name);
+	Item.createItem(name, transformString(name), { name: texture }, { stack: 1 });
+	Item.setAllowedInOffhand(name, true);	
+};
+
+
+
+
+ImprovedItems.createTotemq('debugTotem', 'totem');
+
+Callback.addCallback('EntityHurt', function (attacker, victim, damageValue, damageType, someBool1, someBool2) {
+   let item = Entity.getOffhandItem(Player.get()); 
+   if (item.id == ItemID.debugTotem) {
+   if (victim == Player.get() ) 
+	 Game.tipMessage("damageValue: " + damageValue + '\ndamageType: ' + damageType)
+		  else	Game.tipMessage("damageValue: " + damageValue + '\ndamageType: ' + damageType + '\nvictim: ' + victim);
+   }
+});
