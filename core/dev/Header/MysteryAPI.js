@@ -111,3 +111,19 @@ Callback.addCallback('EntityHurt', function (attacker, victim, damageValue, dama
 		  else	Game.tipMessage("damageValue: " + damageValue + '\ndamageType: ' + damageType + '\nvictim: ' + victim);
    }
 });
+
+
+
+
+ImprovedItems.createTotem('EnchantedTotem', 'totem', 'destroyBlock', 
+	function(item, enchantData, region, coods, block, player){
+		Game.prevent();
+	let funct = Block.getDropFunction(block.id),
+		enchants = item.extra.getEnchants(), 
+		drops = funct(coords, block.id, block.data, ToolAPI.getBlockData(block.id).level, enchantData, Entity.getCarriedItem(player), region);
+		
+	for(let i in drops)
+		        region.spawnDroppedItem(coords.x + .5, coords.y + .5, coords.z + .5, drops[i].id, drops[i].count, drops[i].data, drops[i].extra);
+		    region.destroyBlock(coords.x, coords.y, coords.z);
+	}
+});
