@@ -1,4 +1,10 @@
-var invUtil = {
+LIBRARY({
+	name: "InvUtil",
+	version: 1,
+	shared: true,
+	api: "CoreEngine"
+});
+var InvUtil = {
 	chargeItem: function(chargedItem, chargeItem, charge, decrease) {
 		Callback.addCallback("ServerPlayerTick", function(player) {
 			let actor = new PlayerActor(player);
@@ -11,6 +17,7 @@ var invUtil = {
 					break;
 				}
 			}
+
 		});
 	},
 	getItemCount: function(id, data, extra) {
@@ -27,6 +34,7 @@ var invUtil = {
 				}
 		}
 	},
+
 	dropInventoryItem: function(id, count, data, extra) {
 		for (let y = 0; y <= 40; y++) {
 			let actor = new PlayerActor(Player.get());
@@ -37,6 +45,7 @@ var invUtil = {
 			}
 		}
 	},
+
 	hasItem: function(slot) {
 		let actor = new PlayerActor(Player.get());
 		let item = actor.getInventorySlot(y);
@@ -46,15 +55,17 @@ var invUtil = {
 			return false;
 		}
 	},
+	//хз робит ли
 	getLeftHand: function() {
 		return Entity.getOffhandItem(Player.get());
 	},
+
 	removeItem: function(id, data, extra, decrease) {
 		for (let y = 0; y <= 36; y++) {
 			let actor = new PlayerActor(Player.get());
 			let item = actor.getInventorySlot(y);
 			if (item.id == id && item.data == data && item.extra && item.extra == extra) {
-				actor.setInventorySlot(y, item.id, item.count - decrease || 1, item.data, item.extra)
+				actor.setInventorySlot(y, item.id, item.count - decrease || 1, item.data, item.extra);
 			}
 		}
 	},
@@ -64,7 +75,7 @@ var invUtil = {
 				let actor = new PlayerActor(Player.get());
 				let item = actor.getInventorySlot(y);
 				if (item.id == id && item.data == data) {
-					actor.setInventorySlot(y, item.id, item.count - decrease || 1, item.data, item.extra)
+					actor.setInventorySlot(y, item.id, item.count - decrease || 1, item.data, item.extra);
 				}
 			}
 		});
@@ -81,12 +92,13 @@ var invUtil = {
 			if (item.id == id && item.data == data && item.extra)
 				if (extra) {
 					if (item.extra == extra) {
-						return y;
+						return item;
 					}
 				} else {
-					return y;
+					return item;
 				}
 		}
 	}
 
 };
+EXPORT('InvUtil', InvUtil);
