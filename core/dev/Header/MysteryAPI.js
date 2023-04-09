@@ -126,4 +126,4 @@ ImprovedItems.createTotem('EnchantedTotem', 'totem', 'destroyBlock',
 		        region.spawnDroppedItem(coords.x + .5, coords.y + .5, coords.z + .5, drops[i].id, drops[i].count, drops[i].data, drops[i].extra);
 		    region.destroyBlock(coords.x, coords.y, coords.z);
 	}
-});
+);
