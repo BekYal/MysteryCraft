@@ -9,46 +9,23 @@ BUILD INFO:
 
 // file: Header/MysteryAPI.js
 
-const ImprovedItems = {}, MysteryAPI = {}, InvTool = {};
+const ImprovedItems = {}, MysteryAPI = {}, InvTool = {}, Textures = {};
 
+var __dir_items__ = __dir__ + "core/assets/items-opaque/";
+var __dir_blocks__ = __dir__ + "core/assets/terrain-atlas/";
 
+Item.createItem("ruby", "ruby",{name: "Ruby_modificator"}, {stack: 1});
+Item.createItem("Empty_belt", "Empty_belt", {name: "Empty_belt"}, {stack: 1});
 
-ImprovedItems.createTotem = function(id, data, texture, params){
-	IDRegistry.genItemID(id);
-	Item.createItem(id, id,
-		{name: texture, data: data}, 
-		{isTech: false, stack: 1});
-Item.addCreativeGroup("totems", "totems", [ItemID[id]]);
-
-	Item. Item.setAllowedInOffhand(id, true);
-
-	Callback.addCallback("ServerPlayerTickFunction", function (player) {
-	let item = Entity.getOffhandItem(player);
-	if (item.id == ItemID[id] && item.data == data) {
-		params.inHand(player, item);
-	}
-	});
+Textures.createItemTexture = function (textures){
+	let texture1 = FileTools.ReadImage(__dir_items__ + textures.firs + ".png");
+	let texture2 = FileTools.ReadImage(__dir_items__ + textures.second + ".png");
+	let emptyBmp = android.graphics.Bitmap.createBitmap(16, 16, android.graphics.Bitmap.Config.ARGB_8888);
+	let cvs1 = new android.graphics.Canvas(emptyBmp);
+		cvs1.drawBitmap(texture1, 0, 0, new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG));  
+		cvs1.drawBitmap(texture2, 0, 0, new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG));
+	FileTools.WriteImage(__dir_items__ + textures.last  + ".png", emptyBmp);
 };
-/*
-var Textures = {
-	create: function(path, path2, resultPath){
-let texture1 = FileTools.ReadImage(path);
-  let texture2 = FileTools.ReadImage(path2);
-let emptyBmp = android.graphics.Bitmap.createBitmap(16, 16, android.graphics.Bitmap.Config.ARGB_8888);
-  let cvs1 = new android.graphics.Canvas(emptyBmp);
-cvs1.drawBitmap(texture1, 0, 0, null);  cvs1.drawBitmap(texture2, 0, 0, null);
-FileTools.WriteImage(resultPath, emptyBmp1);
-}
-};
-Textures.create("/core/assets/items-opaque/Poes_0.png",
-		"/core/assets/items-opaque/dark_crystal_orb.png",
-		"/core/assets/items-opaque/huyamBalam.png");
-
-IDRegistry.genItemID("huyamBal");
-Item.createItem("huyamBal", "huyamBal", {name: "huyamBalam", meta: 0}, {isTech:
-false, stack: 1});
-
-*/
 
 
 
@@ -95,6 +72,36 @@ if(Emtity.getCarriedItem(victim).id == 258){    Game.message(damageType + " " + 
 
 // file: Debug.js
 
+/*let clck = 0;
+Saver.addSavesScope("clck", 
+	function read(scope){
+		clck = scope? scope.clck: 0;
+	},
+	function save(){
+		return {"clck": clck};
+	}
+);
+
+Item.createItem("debug_item_myster", "debug item",
+	{data: 0, name: "stick"},
+	{ stack: 1});
+	Callback.addCallback("ItemUse", function(coords, item, block, isExternal, player){
+		if(item.id == ItemID.debug_item_myster){
+			if(cl == 0){
+				Game.message(coords + "")
+				cl++;
+			}
+			if(cl == 1){
+				cl++;
+			}
+			if(cl == 2){
+				cl++;
+			}
+			if(cl == 3){
+				cl--;
+			}
+		}
+	});*/
 
 
 
