@@ -30,10 +30,70 @@ IDRegistry.genItemID('Empty_belt');
 		
 	Item.createItem("Empty_belt", "Empty_belt", 
 		{ name: "Empty_belt" }, { stack: 1 });
-		
-	
-	
 
+
+	
+var ImprovedItem = function(name) {
+	
+	this.createTotem = function(texture, danage, useDecrease, func) {
+		IDRegistry.genItemID(name);
+		Item.createItem(name, transformString(name), { name: texture }, { stack: 1 });
+			Item.setMaxDamage(ItemID[name], damage)		
+			Item.setAllowedInOffhand(name, true);
+		
+		if(func.tick){
+			Callback.addCallback("ServerPlayerTick", function(player) {
+				let item = Entity.getOffhandItem(player),
+				let	actor = new PlayerActor(player);
+				if (item.id == ItemID[name] && World.getThreadTime() % 40 == 0 ) {
+					func.tick(item, player);
+					actor.setInventorySlot(item, ItemID[name], item.count, item.data =+ useDecrease || 1 , item.extra);
+				}
+			});
+		}
+		if(func.hurt){
+				Callback.addCallback('EntityHurt', function(attacker, victim, damageValue, damageType, someBool0, someBool2) {
+				let item = Entity.getOffhandItem(attacker);
+				let	actor = new PlayerActor(player);
+				if (item.id == ItemID[name]) {
+					func.hurt(item, attacker, victim, damageValue, damageType);
+					actor.setInventorySlot(item, ItemID[name], item.count, item.data =+ useDecrease || 1 , item.extra);
+				}
+			});
+		}
+		if (ownenrHurt) {
+			Callback.addCallback('EntityHurt', function(attacker, victim, damageValue, damageType, someBool0, someBool2) {
+				let item = Entity.getOffhandItem(victim);
+				let	actor = new PlayerActor(player);
+				if (item.id == ItemID[name]) {
+					func(item, attacker, victim, damageValue, damageType);
+					actor.setInventorySlot(item, ItemID[name], item.count, item.data =+ useDecrease || 1 , item.extra);
+				}
+			});
+		}
+		if (func.destroyBlock) {
+				Callback.addCallback("DestroyBlock", function (coords, block, player){
+				let 
+				   	region = BlockSource.getDefaultForActor(player),
+				   	item = Entity.getOffhandItem(player);
+				let	actor = new PlayerActor(player);
+				if (item.id == ItemID[name]) {
+					let 
+						enchants = item.extra.getEnchants(), 
+						enchantData = {
+							efficiency: enchants[EEnchantment.EFFICIENCY],
+							experience: 0, //hz
+							fortune: enchants[EEnchantment.FORTUNE],
+							silk: enchants[EEnchantment.SILK],
+							unbreaking: enchants[EEnchantment.UNBREAKING]
+						};
+					func(item, enchantData, region, coods, block, player);
+					actor.setInventorySlot(item, ItemID[name], item.count, item.data =+ useDecrease || 1 , item.extra);
+			    }
+			});
+		}
+	};
+}
 
 ImprovedItems.createTotem = function(name, texture, type, func, par) {
 	IDRegistry.genItemID(name);
