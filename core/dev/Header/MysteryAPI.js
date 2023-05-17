@@ -1,3 +1,4 @@
+
 IMPORT('EnchantsHelper');
 IDRegistry.genBlockID("teerch")
 Block.createBlock("teerch",
@@ -40,48 +41,35 @@ IDRegistry.genItemID('Empty_belt');
 
 	
 var ImprovedItem = function() {
-	this.createTotem = function(name, texture, damage, useDecrease, func) {
+	this.createTotem = function(name, texture, damage, func, useDecrease) {
 		IDRegistry.genItemID(name);
 		Item.createItem(name, transformString(name), { name: texture }, { stack: 1 });
-			Item.setMaxDamage(ItemID[name], damage);
-			Item.setAllowedInOffhand(name, true);
-		if (func.hurt){
-				Callback.addCallback('EntityHurt', function(attacker, victim, damageValue, damageType, someBool0, someBool2) {
-				let item = Entity.getOffhandItem(attacker);
-				let	actor = new PlayerActor(player);
-				if (item.id == ItemID[name]) {
-					func.hurt(item, attacker, victim, damageValue, damageType);
-					actor.setInventorySlot(item, ItemID[name], item.count, item.data =+ useDecrease || 1 , item.extra);
-				}
-			});
-		}
-		if (func.tick){
+		Item.setMaxDamage(ItemID[name], damage);
+		Item.setAllowedInOffhand(name, true);
+		if (func.tick ){
 			Callback.addCallback("ServerPlayerTick", function(player) {
-				let item = Entity.getOffhandItem(player),
-					actor = new PlayerActor(player)
-				if (item.id == ItemID[name] && World.getThreadTime() % 40 == 0 ) {
+				let item = Entity.getOffhandItem(player);
+				if (item.id == ItemID[name] && World.getThreadTime() % 40 == 0 && item.data != damage) {
+					Entity.setOffhandItem(player, ItemID[name], item.count, item.data + useDecrease || 1 , item.extra)
 					func.tick(item, player);
-					actor.setInventorySlot(item, ItemID[name], item.count, item.data =+ useDecrease || 1 , item.extra);
-				}
+				}// else if (item.id == ItemID[name] && item.data == damage) 
 			});
 		}
 		if (func.hurt){
 				Callback.addCallback('EntityHurt', function(attacker, victim, damageValue, damageType, someBool0, someBool2) {
 				let item = Entity.getOffhandItem(attacker);
-				let	actor = new PlayerActor(player);
-				if (item.id == ItemID[name]) {
+				if (item.id == ItemID[name] && item.data != damage) {
 					func.hurt(item, attacker, victim, damageValue, damageType);
-					actor.setInventorySlot(item, ItemID[name], item.count, item.data =+ useDecrease || 1 , item.extra);
-				}
+					Entity.setOffhandItem(attacker, ItemID[name], item.count, item.data + useDecrease || 1 , item.extra)
+				} 
 			});
 		}
 		if (func.ownenrHurt) {
 			Callback.addCallback('EntityHurt', function(attacker, victim, damageValue, damageType, someBool0, someBool2) {
 				let item = Entity.getOffhandItem(victim);
-				let	actor = new PlayerActor(player);
-				if (item.id == ItemID[name]) {
-					func(item, attacker, victim, damageValue, damageType);
-					actor.setInventorySlot(item, ItemID[name], item.count, item.data =+ useDecrease || 1 , item.extra);
+				if (item.id == ItemID[name] && item.data != damage) {
+					func.ownenrHurt(item, attacker, victim, damageValue, damageType);
+					Entity.setOffhandItem(attacker, ItemID[name], item.count, item.data + useDecrease || 1 , item.extra)
 				}
 			});
 		}
@@ -90,7 +78,7 @@ var ImprovedItem = function() {
 				let region = BlockSource.getDefaultForActor(player),
 					item = Entity.getOffhandItem(player), 
 					actor = new PlayerActor(player);
-				if (item.id == ItemID[name]) {
+				if (item.id == ItemID[name] && item.data != damage) {
 					let enchants = item.extra.getEnchants(), 
 						enchantData = {
 							efficiency: enchants[EEnchantment.EFFICIENCY],
@@ -99,20 +87,33 @@ var ImprovedItem = function() {
 							silk: enchants[EEnchantment.SILK],
 							unbreaking: enchants[EEnchantment.UNBREAKING]
 						};
-					
-					func(item, enchantData, region, coods, block, player);
-					actor.setInventorySlot(item, ItemID[name], item.count, item.data =+ useDecrease || 1 , item.extra);
+					func.destroyBlock(item, enchantData, region, coods, block, player);
+					Entity.setOffhandItem(player, ItemID[name], item.count, item.data =+ useDecrease || 1 , item.extra)
 			    }
 			});
 		}
 	}
 }
 
-var hu = new ImprovedItem()
-	.createTotem('huyaaaaaaaaaa', 'stick', 10, 3, {
-		tick: function(item, player){
-			Game.message("hh");
-		}
-	})
+var hu = new ImprovedItem().createTotem('huyaa', 'stick', 100, {
+	tick(item, player){
+		Game.message("hhh");
+	}, 
+	hurt(item, attacker, victim, damageValue, damageType){
+		Game.message("huyy");
+	},
+	ownenrHurt(item, attacker, victim, damageValue, damageType){
+		Game.message("herrr");
+	}
+}, 5);
+	/*
+	Callback.addCallback("ServerPlayerTick", function (player) {
+		Entity.setOffhandItem(player, 260, 1, 0)
+		let actor = new PlayerActor(player);
+		/*for(let i = 0; i < 1000; i++){
+			let sl = actor.getInventorySlot(i);
+			if (sl.id == ItemID.huyaa) {
+				Game.message(i + '');
 
-
+	});
+*/
