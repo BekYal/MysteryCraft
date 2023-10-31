@@ -105,15 +105,15 @@ var hu = new ImprovedItems().createTotem('huyaa', 'stick', 100, {
 		Game.message("huy: " + owmer);
 	},
 	tick(item, player) {
-		Game.message("hhh");
+		Game.message("haaaahh");
 	},
 	hurt(item, attacker, victim, damageValue, damageType) {
-		Game.message("huyy");
+		Game.message("huyaay");
 	},
 	ownerHurt(item, attacker, victim, damageValue, damageType) {
-		Game.message("herrr");
+		Game.message("heraaaaaarr");
 	},
 	destroyBlock(item, region, coods, block, player){
-		Game.message("herrrrr");
+		Game.message("herrdsfrr");
 	}
 }, 5);
